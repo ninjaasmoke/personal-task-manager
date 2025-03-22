@@ -13,4 +13,6 @@ export interface Task {
   mentions: string[];
   createdAt: string;
   completed: boolean;
+  completedAt?: string;
+  updatedAt?: string;
 }

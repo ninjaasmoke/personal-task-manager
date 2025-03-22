@@ -125,7 +125,10 @@ export function TaskDetailPanel({
 
   const toggleTaskCompletion = () => {
     if (!task) return;
-    updateTask(task.id, { completed: !task.completed });
+    updateTask(task.id, {
+      completed: !task.completed,
+      completedAt: task.completed ? undefined : new Date().toISOString(),
+    });
   };
 
   const handleDeleteTask = () => {
@@ -346,6 +349,13 @@ export function TaskDetailPanel({
                       Created
                     </h4>
                     <p>{new Date(task.createdAt).toLocaleString()}</p>
+                  </div>
+
+                  <div>
+                    <h4 className="text-sm font-medium text-muted-foreground mb-2">
+                      Stats
+                    </h4>
+                    <pre>{JSON.stringify(task, null, 2)}</pre>
                   </div>
                 </div>
               )}

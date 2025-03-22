@@ -19,7 +19,9 @@ export const useTaskStore = create<TaskState>()(
       updateTask: (id, updatedTask) =>
         set((state) => ({
           tasks: state.tasks.map((task) =>
-            task.id === id ? { ...task, ...updatedTask } : task
+            task.id === id
+              ? { ...task, ...updatedTask, updatedAt: new Date().toISOString() }
+              : task
           ),
         })),
       deleteTask: (id) =>

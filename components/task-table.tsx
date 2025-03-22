@@ -71,7 +71,10 @@ export function TaskTable({
     completed: boolean
   ) => {
     e.stopPropagation(); // Prevent row click from firing
-    updateTask(taskId, { completed: !completed });
+    updateTask(taskId, {
+      completed: !completed,
+      completedAt: completed ? undefined : new Date().toISOString(),
+    });
   };
 
   const handleTagClick = (e: React.MouseEvent, tag: string) => {

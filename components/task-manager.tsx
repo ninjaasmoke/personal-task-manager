@@ -11,10 +11,11 @@ import { useTaskStore } from "@/lib/task-store";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { maxAppWidth } from "@/constants";
 
 export function TaskManager() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [maxWidth, setMaxWidth] = useState(1200);
+  const [maxWidth, setMaxWidth] = useState(maxAppWidth);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const { tasks, addTask } = useTaskStore();
   const router = useRouter();
