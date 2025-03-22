@@ -29,15 +29,30 @@ export function TaskManager() {
   // Handle keyboard shortcut
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (
-        e.key === "n" &&
-        !isDialogOpen &&
-        !selectedTaskId &&
-        !(e.target instanceof HTMLInputElement) &&
-        !(e.target instanceof HTMLTextAreaElement)
-      ) {
+      const isInputActive =
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement;
+      const searchInput = document.getElementById(
+        "search-input"
+      ) as HTMLInputElement;
+
+      if (e.key === "n" && !isDialogOpen && !selectedTaskId && !isInputActive) {
         e.preventDefault();
         setIsDialogOpen(true);
+        return;
+      }
+
+      if (e.key === "/" && !isDialogOpen && !selectedTaskId && !isInputActive) {
+        e.preventDefault();
+        searchInput?.focus();
+        return;
+      }
+
+      if (e.key === "Escape") {
+        e.preventDefault();
+        searchInput?.blur();
+        setIsDialogOpen(false);
+        setSelectedTaskId(null);
       }
     };
 
