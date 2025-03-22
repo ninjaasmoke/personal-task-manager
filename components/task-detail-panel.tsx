@@ -11,13 +11,6 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -30,6 +23,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import { PrioritySelector } from "./priority-selector";
 
 interface TaskDetailPanelProps {
   taskId: string | null;
@@ -99,13 +93,13 @@ export function TaskDetailPanel({
 
     // Parse hashtags and mentions
     const hashtags = tagsInput
-      .split(/[,\s]+/)
+      .split(/[,]+/)
       .map((tag) => tag.trim())
       .filter((tag) => tag.length > 0)
       .map((tag) => (tag.startsWith("#") ? tag.substring(1) : tag));
 
     const mentions = mentionsInput
-      .split(/[,\s]+/)
+      .split(/[,]+/)
       .map((mention) => mention.trim())
       .filter((mention) => mention.length > 0)
       .map((mention) =>
@@ -194,7 +188,9 @@ export function TaskDetailPanel({
               {isEditing ? (
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="edit-title">Title</Label>
+                    <Label className="mb-1" htmlFor="edit-title">
+                      Title
+                    </Label>
                     <Input
                       id="edit-title"
                       value={title}
@@ -206,7 +202,9 @@ export function TaskDetailPanel({
                   </div>
 
                   <div>
-                    <Label htmlFor="edit-description">Description</Label>
+                    <Label className="mb-1" htmlFor="edit-description">
+                      Description
+                    </Label>
                     <Textarea
                       id="edit-description"
                       value={description}
@@ -219,32 +217,16 @@ export function TaskDetailPanel({
                   </div>
 
                   <div>
-                    <Label htmlFor="edit-priority">Priority</Label>
-                    <Select
-                      value={priority.toString()}
-                      onValueChange={(value) =>
-                        setPriority(Number.parseInt(value) as Priority)
-                      }
-                    >
-                      <SelectTrigger id="edit-priority">
-                        <SelectValue placeholder="Select priority" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value={Priority.LOW.toString()}>
-                          Low
-                        </SelectItem>
-                        <SelectItem value={Priority.MEDIUM.toString()}>
-                          Medium
-                        </SelectItem>
-                        <SelectItem value={Priority.HIGH.toString()}>
-                          High
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Label className="mb-1" htmlFor="edit-priority">
+                      Priority
+                    </Label>
+                    <PrioritySelector value={priority} onChange={setPriority} />
                   </div>
 
                   <div>
-                    <Label htmlFor="edit-hashtags">Hashtags</Label>
+                    <Label className="mb-1" htmlFor="edit-hashtags">
+                      Hashtags
+                    </Label>
                     <Input
                       id="edit-hashtags"
                       value={tagsInput}
@@ -254,7 +236,9 @@ export function TaskDetailPanel({
                   </div>
 
                   <div>
-                    <Label htmlFor="edit-mentions">Mentions</Label>
+                    <Label className="mb-1" htmlFor="edit-mentions">
+                      Mentions
+                    </Label>
                     <Input
                       id="edit-mentions"
                       value={mentionsInput}
@@ -348,14 +332,25 @@ export function TaskDetailPanel({
                     <h4 className="text-sm font-medium text-muted-foreground mb-2">
                       Created
                     </h4>
-                    <p>{new Date(task.createdAt).toLocaleString()}</p>
+                    <p>
+                      {new Date(task.createdAt).toLocaleString(undefined, {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                        hour: "numeric",
+                        minute: "numeric",
+                        localeMatcher: "best fit",
+                      })}
+                    </p>
                   </div>
 
                   <div>
                     <h4 className="text-sm font-medium text-muted-foreground mb-2">
                       Stats
                     </h4>
-                    <pre>{JSON.stringify(task, null, 2)}</pre>
+                    <pre className="overflow-y-auto bg-muted p-2 rounded-md">
+                      {JSON.stringify(task, null, 2)}
+                    </pre>
                   </div>
                 </div>
               )}
