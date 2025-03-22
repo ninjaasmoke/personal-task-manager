@@ -1,1 +1,1 @@
-export const maxAppWidth = 1200;
+export const maxAppWidth = 900;
