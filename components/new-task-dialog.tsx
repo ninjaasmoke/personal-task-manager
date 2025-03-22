@@ -16,14 +16,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { type Task, Priority } from "@/types/task";
+import { PrioritySelector } from "./priority-selector";
 
 interface NewTaskDialogProps {
   open: boolean;
@@ -52,7 +46,7 @@ export function NewTaskDialog({
     // Helper function to extract tags or mentions from text
     const extractItems = (text: string, prefix: string) => {
       return text
-        .split(/[,\s]+/)
+        .split(/[,]+/)
         .filter((word) => word.startsWith(prefix))
         .map((item) => item.substring(prefix.length));
     };
@@ -66,7 +60,7 @@ export function NewTaskDialog({
     // Helper function to normalize input that may contain prefixes
     const normalizeInput = (input: string, prefix: string) => {
       return input
-        .split(/[,\s]+/)
+        .split(/[,]+/)
         .map((item) => item.trim())
         .filter((item) => item.length > 0)
         .map((item) =>
@@ -172,23 +166,7 @@ export function NewTaskDialog({
             </div>
             <div className="grid gap-2">
               <Label htmlFor="priority">Priority</Label>
-              <Select
-                value={priority.toString()}
-                onValueChange={(value) =>
-                  setPriority(Number.parseInt(value) as Priority)
-                }
-              >
-                <SelectTrigger id="priority">
-                  <SelectValue placeholder="Select priority" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={Priority.LOW.toString()}>Low</SelectItem>
-                  <SelectItem value={Priority.MEDIUM.toString()}>
-                    Medium
-                  </SelectItem>
-                  <SelectItem value={Priority.HIGH.toString()}>High</SelectItem>
-                </SelectContent>
-              </Select>
+              <PrioritySelector value={priority} onChange={setPriority} />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="hashtags">Hashtags</Label>
@@ -196,7 +174,7 @@ export function NewTaskDialog({
                 id="hashtags"
                 value={tagsInput}
                 onChange={(e) => setTagsInput(e.target.value)}
-                placeholder="e.g. work, project, meeting (comma or space separated)"
+                placeholder="e.g. work, project, meeting (comma separated)"
               />
             </div>
             <div className="grid gap-2">
@@ -205,7 +183,7 @@ export function NewTaskDialog({
                 id="mentions"
                 value={mentionsInput}
                 onChange={(e) => setMentionsInput(e.target.value)}
-                placeholder="e.g. john, sarah (comma or space separated)"
+                placeholder="e.g. john, sarah (comma separated)"
               />
             </div>
           </div>
