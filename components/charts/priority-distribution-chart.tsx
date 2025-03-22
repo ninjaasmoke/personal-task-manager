@@ -57,7 +57,6 @@ export function PriorityDistributionChart({
     innerRadius,
     outerRadius,
     percent,
-    index,
     name,
   }: any) => {
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
