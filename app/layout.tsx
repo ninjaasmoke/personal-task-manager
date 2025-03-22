@@ -4,7 +4,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { IBM_Plex_Sans } from "next/font/google";
 import type { Metadata } from "next";
 
-const appFont = IBM_Plex_Sans({ weight: "400" });
+const appFont = IBM_Plex_Sans({ weight: "400", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Task Manager",
