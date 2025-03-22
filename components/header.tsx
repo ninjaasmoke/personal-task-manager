@@ -48,7 +48,7 @@ export function Header({ maxWidth, setMaxWidth }: HeaderProps) {
             )}
           </Link>
         </div>
-        <div className="ml-auto flex items-center space-x-4">
+        <div className="hidden md:flex ml-auto items-center space-x-4">
           <button
             onClick={() => setShowWidthControl(!showWidthControl)}
             className="text-sm text-muted-foreground hover:text-foreground"

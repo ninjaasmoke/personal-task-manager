@@ -1,10 +1,10 @@
 import type React from "react";
 import "@/app/globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { IBM_Plex_Mono } from "next/font/google";
+import { DM_Mono } from "next/font/google";
 import type { Metadata } from "next";
 
-const appFont = IBM_Plex_Mono({ weight: "400", subsets: ["latin"] });
+const appFont = DM_Mono({ weight: "400", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Task Manager",
