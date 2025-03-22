@@ -59,10 +59,12 @@ export function TaskManager() {
   };
 
   const handleTagClick = (tag: string) => {
+    handleClosePanel();
     router.push(`?tag=${encodeURIComponent(tag)}`);
   };
 
   const handleMentionClick = (mention: string) => {
+    handleClosePanel();
     router.push(`?mention=${encodeURIComponent(mention)}`);
   };
 
