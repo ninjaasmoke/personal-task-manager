@@ -155,7 +155,8 @@ export function TaskTable({
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <Input
-          placeholder="Search tasks..."
+          id="search-input"
+          placeholder="Search tasks... (click /)"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full sm:w-1/3"
