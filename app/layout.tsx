@@ -18,6 +18,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+        <meta name="theme-color" content="#000000" />
+      </head>
       <body className={appFont.className}>
         <ThemeProvider
           attribute="class"
