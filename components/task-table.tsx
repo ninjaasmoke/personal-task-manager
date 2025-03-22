@@ -23,7 +23,7 @@ import { ChevronDown, ChevronUp, Filter, Check } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { type Task, Priority } from "@/types/task";
 import { useTaskStore } from "@/lib/task-store";
-import { cn } from "@/lib/utils";
+import { cn, dateStringToFriendly } from "@/lib/utils";
 
 interface TaskTableProps {
   tasks: Task[];
@@ -158,7 +158,7 @@ export function TaskTable({
           placeholder="Search tasks..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="max-w-sm"
+          className="w-full sm:w-1/3"
         />
         <div className="flex flex-wrap gap-2">
           <DropdownMenu>
@@ -350,7 +350,7 @@ export function TaskTable({
                     </div>
                   </TableCell>
                   <TableCell className="text-muted-foreground">
-                    {new Date(task.createdAt).toLocaleDateString()}
+                    {dateStringToFriendly(task.createdAt)}
                   </TableCell>
                 </TableRow>
               ))
