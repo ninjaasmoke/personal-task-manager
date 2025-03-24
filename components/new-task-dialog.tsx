@@ -139,7 +139,7 @@ export function NewTaskDialog({
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="title">Title</Label>
+              <Label htmlFor="title">Title*</Label>
               <Input
                 id="title"
                 value={title}

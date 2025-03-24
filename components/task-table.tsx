@@ -50,7 +50,7 @@ export function TaskTable({
   onMentionClick,
 }: TaskTableProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortField, setSortField] = useState<SortField>("createdAt");
+  const [sortField, setSortField] = useState<SortField>("priority");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
   const [priorityFilter, setPriorityFilter] = useState<Priority | null>(null);
   const [completionFilter, setCompletionFilter] =
@@ -225,146 +225,148 @@ export function TaskTable({
         </div>
       </div>
 
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-12"></TableHead>
-              <TableHead
-                className="cursor-pointer"
-                onClick={() => handleSort("title")}
-              >
-                <div className="flex items-center">
-                  Title
-                  {getSortIcon("title")}
-                </div>
-              </TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead
-                className="cursor-pointer"
-                onClick={() => handleSort("priority")}
-              >
-                <div className="flex items-center">
-                  Priority
-                  {getSortIcon("priority")}
-                </div>
-              </TableHead>
-              <TableHead>Tags</TableHead>
-              <TableHead
-                className="cursor-pointer"
-                onClick={() => handleSort("createdAt")}
-              >
-                <div className="flex items-center">
-                  Created
-                  {getSortIcon("createdAt")}
-                </div>
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredAndSortedTasks.length === 0 ? (
+      <div className="rounded-md border overflow-hidden">
+        <div className={`max-h-[60vh] overflow-auto`}>
+          <Table>
+            <TableHeader className="sticky top-0 bg-background z-10">
               <TableRow>
-                <TableCell colSpan={6} className="h-24 text-center">
-                  No tasks found.
-                </TableCell>
-              </TableRow>
-            ) : (
-              filteredAndSortedTasks.map((task) => (
-                <TableRow
-                  key={task.id}
-                  onClick={() => onTaskClick(task.id)}
-                  className={cn(
-                    "cursor-pointer hover:bg-muted/50",
-                    task.completed && "bg-muted/30 text-muted-foreground"
-                  )}
+                <TableHead className="w-12"></TableHead>
+                <TableHead
+                  className="cursor-pointer"
+                  onClick={() => handleSort("title")}
                 >
-                  <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={(e) =>
-                        toggleTaskCompletion(e, task.id, task.completed)
-                      }
-                    >
-                      <div
-                        className={cn(
-                          "h-5 w-5 rounded-full border-2",
-                          task.completed
-                            ? "bg-primary border-primary flex items-center justify-center"
-                            : "border-muted-foreground"
-                        )}
-                      >
-                        {task.completed && (
-                          <Check className="h-3 w-3 text-primary-foreground" />
-                        )}
-                      </div>
-                    </Button>
-                  </TableCell>
-                  <TableCell
-                    className={cn(
-                      "font-medium",
-                      task.completed && "line-through"
-                    )}
-                  >
-                    <div className="flex items-center gap-1">
-                      {task.title}
-                      {hasLinks(task) && (
-                        <LinkIcon className="h-3.5 w-3.5 text-blue-500 ml-1" />
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell className="max-w-xs truncate">
-                    {task.description}
-                  </TableCell>
-                  <TableCell>
-                    <Badge
-                      className={cn(
-                        priorityColors[task.priority],
-                        task.completed && "opacity-60"
-                      )}
-                    >
-                      {Priority[task.priority]}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex flex-wrap gap-1">
-                      {task.hashtags.map((tag) => (
-                        <Badge
-                          key={tag}
-                          variant="outline"
-                          className={cn(
-                            "text-xs cursor-pointer hover:bg-muted",
-                            task.completed && "opacity-60"
-                          )}
-                          onClick={(e) => handleTagClick(e, tag)}
-                        >
-                          #{tag}
-                        </Badge>
-                      ))}
-                      {task.mentions.map((mention) => (
-                        <Badge
-                          key={mention}
-                          variant="outline"
-                          className={cn(
-                            "text-xs bg-blue-500/10 text-blue-700 dark:text-blue-400 cursor-pointer hover:bg-blue-500/20",
-                            task.completed && "opacity-60"
-                          )}
-                          onClick={(e) => handleMentionClick(e, mention)}
-                        >
-                          @{mention}
-                        </Badge>
-                      ))}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-muted-foreground">
-                    {new Date(task.createdAt).toLocaleDateString()}
+                  <div className="flex items-center">
+                    Title
+                    {getSortIcon("title")}
+                  </div>
+                </TableHead>
+                <TableHead>Description</TableHead>
+                <TableHead
+                  className="cursor-pointer"
+                  onClick={() => handleSort("priority")}
+                >
+                  <div className="flex items-center">
+                    Priority
+                    {getSortIcon("priority")}
+                  </div>
+                </TableHead>
+                <TableHead>Tags</TableHead>
+                <TableHead
+                  className="cursor-pointer"
+                  onClick={() => handleSort("createdAt")}
+                >
+                  <div className="flex items-center">
+                    Created
+                    {getSortIcon("createdAt")}
+                  </div>
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="overflow-y-auto">
+              {filteredAndSortedTasks.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="h-24 text-center">
+                    No tasks found.
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+              ) : (
+                filteredAndSortedTasks.map((task) => (
+                  <TableRow
+                    key={task.id}
+                    onClick={() => onTaskClick(task.id)}
+                    className={cn(
+                      "cursor-pointer hover:bg-muted/50",
+                      task.completed && "bg-muted/30 text-muted-foreground"
+                    )}
+                  >
+                    <TableCell>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                        onClick={(e) =>
+                          toggleTaskCompletion(e, task.id, task.completed)
+                        }
+                      >
+                        <div
+                          className={cn(
+                            "h-5 w-5 rounded-full border-2",
+                            task.completed
+                              ? "bg-primary border-primary flex items-center justify-center"
+                              : "border-muted-foreground"
+                          )}
+                        >
+                          {task.completed && (
+                            <Check className="h-3 w-3 text-primary-foreground" />
+                          )}
+                        </div>
+                      </Button>
+                    </TableCell>
+                    <TableCell
+                      className={cn(
+                        "font-medium",
+                        task.completed && "line-through"
+                      )}
+                    >
+                      <div className="flex items-center gap-1">
+                        {task.title}
+                        {hasLinks(task) && (
+                          <LinkIcon className="h-3.5 w-3.5 text-blue-500 ml-1" />
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="max-w-xs truncate">
+                      {task.description}
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        className={cn(
+                          priorityColors[task.priority],
+                          task.completed && "opacity-60"
+                        )}
+                      >
+                        {Priority[task.priority]}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-wrap gap-1">
+                        {task.hashtags.map((tag) => (
+                          <Badge
+                            key={tag}
+                            variant="outline"
+                            className={cn(
+                              "text-xs cursor-pointer hover:bg-muted",
+                              task.completed && "opacity-60"
+                            )}
+                            onClick={(e) => handleTagClick(e, tag)}
+                          >
+                            #{tag}
+                          </Badge>
+                        ))}
+                        {task.mentions.map((mention) => (
+                          <Badge
+                            key={mention}
+                            variant="outline"
+                            className={cn(
+                              "text-xs bg-blue-500/10 text-blue-700 dark:text-blue-400 cursor-pointer hover:bg-blue-500/20",
+                              task.completed && "opacity-60"
+                            )}
+                            onClick={(e) => handleMentionClick(e, mention)}
+                          >
+                            @{mention}
+                          </Badge>
+                        ))}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {new Date(task.createdAt).toLocaleDateString()}
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </div>
   );

@@ -95,7 +95,7 @@ function LinkPreviewFallback({
         <Globe className="h-4 w-4 text-primary" />
       </div>
       <div className="overflow-hidden">
-        <p className="text-sm font-medium truncate">{displayUrl}</p>
+        <p className="text-sm font-medium truncate">{displayUrl ?? url}</p>
         <p className="text-xs text-muted-foreground">Click to open link</p>
       </div>
     </div>

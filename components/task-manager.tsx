@@ -99,10 +99,11 @@ export function TaskManager() {
   });
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen items-center justify-center">
       <Header maxWidth={maxWidth} setMaxWidth={setMaxWidth} />
+      <div className="h-[60px] w-full" />
       <div
-        className="flex-1 px-4 py-6 md:px-6"
+        className="px-4 py-6 md:px-6"
         style={{ maxWidth: `${maxWidth}px`, margin: "0 auto", width: "100%" }}
       >
         <div className="flex items-center justify-between mb-4">
