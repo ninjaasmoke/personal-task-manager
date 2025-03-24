@@ -2,10 +2,10 @@
 
 import type React from "react";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { Priority } from "@/types/task";
 import { useTaskStore } from "@/lib/task-store";
-import { X, Check, Trash2 } from "lucide-react";
+import { X, Check, Trash2, LinkIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -23,7 +23,9 @@ import {
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { PrioritySelector } from "./priority-selector";
+import { PrioritySelector } from "@/components/priority-selector";
+import { extractUrls } from "@/lib/link-utils";
+import { LinkPreview } from "@/components/link-preview";
 
 interface TaskDetailPanelProps {
   taskId: string | null;
@@ -59,6 +61,12 @@ export function TaskDetailPanel({
 
   // Get the current task
   const task = taskId ? tasks.find((t) => t.id === taskId) : null;
+
+  // Extract links from description
+  const links = useMemo(() => {
+    if (!task?.description) return [];
+    return extractUrls(task.description);
+  }, [task?.description]);
 
   // Initialize form with task data when task changes
   useEffect(() => {
@@ -281,6 +289,22 @@ export function TaskDetailPanel({
                       {task.description || "No description provided."}
                     </p>
                   </div>
+
+                  {links.length > 0 && (
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <LinkIcon className="h-4 w-4 text-muted-foreground" />
+                        <h4 className="text-sm font-medium text-muted-foreground">
+                          Links
+                        </h4>
+                      </div>
+                      <div className="space-y-2">
+                        {links.map((url: string, index: number) => (
+                          <LinkPreview key={`${url}-${index}`} url={url} />
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
                   {(task.hashtags.length > 0 || task.mentions.length > 0) && (
                     <Separator />

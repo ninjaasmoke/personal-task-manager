@@ -19,11 +19,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, ChevronUp, Filter, Check } from "lucide-react";
+import { ChevronDown, ChevronUp, Filter, Check, LinkIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { type Task, Priority } from "@/types/task";
 import { useTaskStore } from "@/lib/task-store";
-import { cn, dateStringToFriendly } from "@/lib/utils";
+import { cn } from "@/lib/utils";
+import { extractUrls } from "@/lib/link-utils";
 
 interface TaskTableProps {
   tasks: Task[];
@@ -49,11 +50,11 @@ export function TaskTable({
   onMentionClick,
 }: TaskTableProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortField, setSortField] = useState<SortField>("priority");
+  const [sortField, setSortField] = useState<SortField>("createdAt");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
   const [priorityFilter, setPriorityFilter] = useState<Priority | null>(null);
   const [completionFilter, setCompletionFilter] =
-    useState<CompletionFilter>("all");
+    useState<CompletionFilter>("active");
   const { updateTask } = useTaskStore();
 
   const handleSort = (field: SortField) => {
@@ -71,10 +72,7 @@ export function TaskTable({
     completed: boolean
   ) => {
     e.stopPropagation(); // Prevent row click from firing
-    updateTask(taskId, {
-      completed: !completed,
-      completedAt: completed ? undefined : new Date().toISOString(),
-    });
+    updateTask(taskId, { completed: !completed });
   };
 
   const handleTagClick = (e: React.MouseEvent, tag: string) => {
@@ -151,15 +149,19 @@ export function TaskTable({
     );
   };
 
+  // Check if a task has links
+  const hasLinks = (task: Task) => {
+    return task.description ? extractUrls(task.description).length > 0 : false;
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <Input
-          id="search-input"
-          placeholder="Search tasks... (click /)"
+          placeholder="Search tasks..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full sm:w-1/3"
+          className="max-w-sm"
         />
         <div className="flex flex-wrap gap-2">
           <DropdownMenu>
@@ -263,7 +265,7 @@ export function TaskTable({
             {filteredAndSortedTasks.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="h-24 text-center">
-                  No tasks yet.
+                  No tasks found.
                 </TableCell>
               </TableRow>
             ) : (
@@ -305,7 +307,12 @@ export function TaskTable({
                       task.completed && "line-through"
                     )}
                   >
-                    {task.title}
+                    <div className="flex items-center gap-1">
+                      {task.title}
+                      {hasLinks(task) && (
+                        <LinkIcon className="h-3.5 w-3.5 text-blue-500 ml-1" />
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell className="max-w-xs truncate">
                     {task.description}
@@ -351,7 +358,7 @@ export function TaskTable({
                     </div>
                   </TableCell>
                   <TableCell className="text-muted-foreground">
-                    {dateStringToFriendly(task.createdAt)}
+                    {new Date(task.createdAt).toLocaleDateString()}
                   </TableCell>
                 </TableRow>
               ))

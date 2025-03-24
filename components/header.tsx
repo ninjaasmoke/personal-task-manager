@@ -60,7 +60,7 @@ export function Header({ maxWidth, setMaxWidth }: HeaderProps) {
               <Slider
                 value={[maxWidth]}
                 min={400}
-                max={maxAppWidth}
+                max={1200}
                 step={50}
                 onValueChange={(value) => setMaxWidth(value[0])}
               />
